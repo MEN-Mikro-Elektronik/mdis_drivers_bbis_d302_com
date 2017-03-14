@@ -325,14 +325,14 @@ static int32 D302_Init(
     DBGWRT_1((DBH,"BB - %s_Init\n",BBNAME));
 
 	/* PCI_DOMAIN_NUMBER - optional */
-	status = DESC_GetUInt32( brdHdl->descHdl, 0, &brdHdl->pciDomainNbr, 
+	status = DESC_GetUInt32( brdHdl->descHdl, 0, &brdHdl->pciDomainNbr,
 							 "PCI_DOMAIN_NUMBER");
-							 
+
 	if ( status == ERR_DESC_KEY_NOTFOUND ) {
 		/* default pci domain is 0 */
 		brdHdl->pciDomainNbr = 0;
 	}
-	
+
     /* PCI_BUS_NUMBER - required if PCI_BUS_PATH not given  */
     status = DESC_GetUInt32( brdHdl->descHdl, 0, &brdHdl->pciBusNbr,
 							 "PCI_BUS_NUMBER");
@@ -393,8 +393,8 @@ static int32 D302_Init(
         	return( Cleanup(brdHdl,status) );
 
 	    /* convert PCI slot into PCI device id */
-    	if( (status = OSS_PciSlotToPciDevice( osHdl, 
-    		                                  OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr), 
+    	if( (status = OSS_PciSlotToPciDevice( osHdl,
+    		                                  OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
     		                                  mechSlot, (int32*)&brdHdl->pciDev)) )
 			return( Cleanup(brdHdl,status) );
     }
@@ -414,8 +414,8 @@ static int32 D302_Init(
 		| check vendor-id and device-id |
 		+------------------------------*/
 		/* get vendor-id */
-		if( (status = OSS_PciGetConfig( osHdl, 
-			                            OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr), 
+		if( (status = OSS_PciGetConfig( osHdl,
+			                            OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
 			                            brdHdl->pciDev, 0, OSS_PCI_VENDOR_ID, &id )) )
 			return( Cleanup(brdHdl,status) );
 
@@ -427,8 +427,8 @@ static int32 D302_Init(
 		}
 
 		/* get device-id */
-		if( (status = OSS_PciGetConfig( osHdl, 
-			                            OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr), 
+		if( (status = OSS_PciGetConfig( osHdl,
+			                            OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
 			                            brdHdl->pciDev, 0, OSS_PCI_DEVICE_ID, &id )) )
 			return( Cleanup(brdHdl,status) );
 
@@ -445,7 +445,7 @@ static int32 D302_Init(
     +-------------------------------------------*/
 	/* get base address from BAR0 */
 	if( (status = OSS_BusToPhysAddr( osHdl, OSS_BUSTYPE_PCI, &brdHdl->bar0,
-									 OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr), 
+									 OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
 									 brdHdl->pciDev, 0, 0)) )
 		return( Cleanup(brdHdl,status) );
 
@@ -460,7 +460,7 @@ static int32 D302_Init(
     }
 
     /* assign the resources */
-    if( (status = OSS_AssignResources( osHdl, OSS_BUSTYPE_PCI, 
+    if( (status = OSS_AssignResources( osHdl, OSS_BUSTYPE_PCI,
     	                               OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
                                        BRD_MODULE_NBR, res )) )
 		return( Cleanup(brdHdl,status) );
@@ -474,7 +474,7 @@ static int32 D302_Init(
         status = OSS_MapPhysToVirtAddr( osHdl,
 					res[i].u.mem.physAddr, res[i].u.mem.size,
 					OSS_ADDRSPACE_MEM, OSS_BUSTYPE_PCI,
-					OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),	
+					OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
 					&brdHdl->virtCtrlBase[i] );
         if( status )
 			return( Cleanup(brdHdl,status) );
@@ -484,8 +484,8 @@ static int32 D302_Init(
     | get interrupt information     |
     +------------------------------*/
     /* get interrupt line */
-	status = OSS_PciGetConfig( osHdl, 
-	                           OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr), 
+	status = OSS_PciGetConfig( osHdl,
+	                           OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
 	                           brdHdl->pciDev, 0, OSS_PCI_INTERRUPT_LINE, &brdHdl->irqLevel );
 
 	/* no interrupt connected */
@@ -801,14 +801,14 @@ static int32 D302_CfgInfo(
 		    *busNbr = brdHdl->pciBusNbr;
             break;
         }
-        
+
         /* pci domain number */
 		case BBIS_CFGINFO_PCI_DOMAIN:
 		{
 			/* domain number */
 			u_int32 *domainNbr = va_arg( argptr, u_int32* );
 	        u_int32 mSlot      = va_arg( argptr, u_int32 );
-	
+
 			*domainNbr = brdHdl->pciDomainNbr;
 			mSlot = mSlot; /* dummy access to avoid compiler warning */
 			break;
@@ -1330,7 +1330,7 @@ static int32 Cleanup(
 		}
 
 		/* unassign the resources */
-		OSS_UnAssignResources( brdHdl->osHdl, OSS_BUSTYPE_PCI, 
+		OSS_UnAssignResources( brdHdl->osHdl, OSS_BUSTYPE_PCI,
 		                       OSS_MERGE_BUS_DOMAIN(brdHdl->pciBusNbr, brdHdl->pciDomainNbr),
 							   BRD_MODULE_NBR, res );
 	}
@@ -1341,6 +1341,7 @@ static int32 Cleanup(
     +------------------------------*/
     /* release memory for the board handle */
     OSS_MemFree( brdHdl->osHdl, (int8*)brdHdl, brdHdl->ownMemSize);
+    brdHdl = NULL;
 
     /*------------------------------+
     |  return error code            |
@@ -1369,28 +1370,28 @@ static int32 ParsePciPath( BBIS_HANDLE *brdHdl, u_int32 *pciBusNbrP ) 	/* nodoc 
 	for(i=0; i<brdHdl->pciPathLen; i++){
 
 		pciDevNbr = brdHdl->pciPath[i];
-		
+
 		if ( ( i==0 ) && ( 0 != brdHdl->pciDomainNbr ) ) {
-			/* as we do not know the numbering order of busses on pci domains, 
-			   try to find the device on all busses instead of looking for the 
+			/* as we do not know the numbering order of busses on pci domains,
+			   try to find the device on all busses instead of looking for the
 			   first bus on the domain                                        */
 			for(pciBusNbr=0; pciBusNbr<0xff; pciBusNbr++) {
-				error = PciParseDev( brdHdl, OSS_MERGE_BUS_DOMAIN(pciBusNbr, brdHdl->pciDomainNbr), 
+				error = PciParseDev( brdHdl, OSS_MERGE_BUS_DOMAIN(pciBusNbr, brdHdl->pciDomainNbr),
 				                     brdHdl->pciPath[0], &vendorID, &deviceID, &headerType,
 								     &secondBus );
-				if ( error == ERR_SUCCESS ) 
+				if ( error == ERR_SUCCESS )
 					break; /* found device */
 			}
-			
+
 			if ( error != ERR_SUCCESS ) { /* device not found */
 				DBGWRT_ERR((DBH,"*** BB - %s: first device 0x%02x in pci bus path "
 				                "not found on domain %d!\n",
 				                BBNAME, brdHdl->pciPath[0], brdHdl->pciDomainNbr ));
-				return error;               
-			}    
+				return error;
+			}
 		} else {
 			/* parse device only once */
-			if( (error = PciParseDev( brdHdl, OSS_MERGE_BUS_DOMAIN(pciBusNbr, brdHdl->pciDomainNbr), 
+			if( (error = PciParseDev( brdHdl, OSS_MERGE_BUS_DOMAIN(pciBusNbr, brdHdl->pciDomainNbr),
 				                      pciDevNbr, &vendorID, &deviceID, &headerType,
 									  &secondBus )))
 				return error;
@@ -1398,7 +1399,7 @@ static int32 ParsePciPath( BBIS_HANDLE *brdHdl, u_int32 *pciBusNbrP ) 	/* nodoc 
 
 		if( vendorID == 0xffff && deviceID == 0xffff ){
 			DBGWRT_ERR((DBH,"*** BB - %s:ParsePciPath: Nonexistant device "
-						"domain %d bus %d dev %d\n", BBNAME, brdHdl->pciDomainNbr, 
+						"domain %d bus %d dev %d\n", BBNAME, brdHdl->pciDomainNbr,
 						pciBusNbr, pciDevNbr ));
 			return ERR_BBIS_NO_CHECKLOC;
 		}
@@ -1406,8 +1407,8 @@ static int32 ParsePciPath( BBIS_HANDLE *brdHdl, u_int32 *pciBusNbrP ) 	/* nodoc 
 		/*--- device is present, is it a bridge ? ---*/
 		if( (headerType & ~OSS_PCI_HEADERTYPE_MULTIFUNCTION) != OSS_PCI_HEADERTYPE_BRIDGE_TYPE ){
 			DBGWRT_ERR((DBH,"*** BB - %s:ParsePciPath: Device is not a bridge!"
-						"domain %d bus %d dev %d vend=0x%x devId=0x%x\n", 
-						BBNAME, brdHdl->pciDomainNbr, pciBusNbr, pciDevNbr, vendorID, 
+						"domain %d bus %d dev %d vend=0x%x devId=0x%x\n",
+						BBNAME, brdHdl->pciDomainNbr, pciBusNbr, pciDevNbr, vendorID,
 						deviceID ));
 
 			return ERR_BBIS_NO_CHECKLOC;
@@ -1456,10 +1457,10 @@ static int32 PciParseDev(
 	int32 error;
 	int32 pciMainDevNbr;
 	int32 pciDevFunc;
-	
+
 	pciMainDevNbr = pciDevNbr;
 	pciDevFunc = 0;
-	
+
 	// special handling for multifunction bridges: set function number
     if ( pciDevNbr > 0x1f ) {
     	// seperate the function number from the device number
@@ -1491,10 +1492,10 @@ static int32 PciParseDev(
 						 pciBusNbr,pciDevNbr,OSS_PCI_HEADER_TYPE);
 
 	DBGWRT_2((DBH, " domain %d bus %d dev %d.%d: vend=0x%x devId=0x%x hdrtype %d\n",
-			  OSS_DOMAIN_NBR( pciBusNbr ), OSS_BUS_NBR( pciBusNbr ), 
+			  OSS_DOMAIN_NBR( pciBusNbr ), OSS_BUS_NBR( pciBusNbr ),
 			  pciMainDevNbr, pciDevFunc, *vendorIDP, *deviceIDP, *headerTypeP ));
-			  
-	if( ((*headerTypeP) & ~OSS_PCI_HEADERTYPE_MULTIFUNCTION) != OSS_PCI_HEADERTYPE_BRIDGE_TYPE )	
+
+	if( ((*headerTypeP) & ~OSS_PCI_HEADERTYPE_MULTIFUNCTION) != OSS_PCI_HEADERTYPE_BRIDGE_TYPE )
 		return ERR_SUCCESS;		/* not bridge device */
 
 
@@ -1535,20 +1536,20 @@ static int32 PciCfgErr(
 {
 	int32 pciMainDevNbr;
 	int32 pciDevFunc;
-	
+
 	pciMainDevNbr = pciDevNbr;
 	pciDevFunc = 0;
-	
+
 	// extract function number from device number if necessary
     if ( pciDevNbr > 0x1f ) {
     	// seperate the function number from the device number
     	pciDevFunc = pciDevNbr >> 5;
     	pciMainDevNbr = ( pciDevNbr & 0x0000001f );
     }
-    
+
 	DBGWRT_ERR((DBH,"*** BB - %s %s: PCI access error 0x%x "
 				"domain %d bus %d dev %d.%d reg 0x%x\n", BBNAME, funcName, error,
-				OSS_DOMAIN_NBR( pciBusNbr ), OSS_BUS_NBR( pciBusNbr ), 
+				OSS_DOMAIN_NBR( pciBusNbr ), OSS_BUS_NBR( pciBusNbr ),
 				pciMainDevNbr, pciDevFunc, reg ));
 	return error;
 }
