@@ -163,8 +163,8 @@ static int32 D302_SetMIface(BBIS_HANDLE*, u_int32, u_int32, u_int32);
 static int32 D302_ClrMIface(BBIS_HANDLE*,u_int32);
 static int32 D302_GetMAddr(BBIS_HANDLE*, u_int32, u_int32, u_int32, void**, u_int32*);
 /* getstat/setstat */
-static int32 D302_SetStat(BBIS_HANDLE*, u_int32, int32, int32);
-static int32 D302_GetStat(BBIS_HANDLE*, u_int32, int32, int32*);
+static int32 D302_SetStat(BBIS_HANDLE*, u_int32, int32, INT32_OR_64);
+static int32 D302_GetStat(BBIS_HANDLE*, u_int32, int32, INT32_OR_64*);
 /* unused */
 static int32 D302_Unused(void);
 /* miscellaneous */
@@ -324,8 +324,8 @@ static int32 D302_Init(
     /* get DEBUG_LEVEL_DESC - optional*/
     status = DESC_GetUInt32(brdHdl->descHdl, OSS_DBG_DEFAULT, &value,
 				"DEBUG_LEVEL_DESC");
-    if ( status && (status!=ERR_DESC_KEY_NOTFOUND) )
-        return( Cleanup(brdHdl,status) );
+	if ( status && (status!=ERR_DESC_KEY_NOTFOUND) )
+		return( Cleanup(brdHdl,status) );
 
 	/* set debug level for DESC module */
 	DESC_DbgLevelSet(brdHdl->descHdl, value);
@@ -392,8 +392,8 @@ static int32 D302_Init(
 
     /* PCI_DEVICE_ID - required if PCI_BUS_SLOT not given  */
     status = DESC_GetUInt32( brdHdl->descHdl, 0xffff, &brdHdl->pciDev, "PCI_DEVICE_ID");
-    if( status && (status!=ERR_DESC_KEY_NOTFOUND) )
-        return( Cleanup(brdHdl,status) );
+	if( status && (status!=ERR_DESC_KEY_NOTFOUND) )
+		return( Cleanup(brdHdl,status) );
 
 	if(status==ERR_DESC_KEY_NOTFOUND){
 
@@ -420,8 +420,8 @@ static int32 D302_Init(
 
     /* exit descHdl */
     status = DESC_Exit( &brdHdl->descHdl );
-    if (status)
-        return( Cleanup(brdHdl,status) );
+	if (status)
+		return( Cleanup(brdHdl,status) );
 
 	if( brdHdl->idCheck ){
 		/*------------------------------+
@@ -464,13 +464,13 @@ static int32 D302_Init(
 		return( Cleanup(brdHdl,status) );
 
     /* compute module ctrl-reg spaces */
-    for( i=0; i<BRD_MODULE_NBR; i++){
-         res[i].type = OSS_RES_MEM;
-        res[i].u.mem.physAddr =	(void*)(
-								(u_int32)brdHdl->bar0 +
+	for( i=0; i<BRD_MODULE_NBR; i++){
+    	res[i].type = OSS_RES_MEM;
+    	res[i].u.mem.physAddr =	(void*)(
+								(U_INT32_OR_64)brdHdl->bar0 +
 								BRD_MBASE_OFFSET(i) +
 								BRD_CTRLR_OFFSET );
-        res[i].u.mem.size = BRD_CTRL_SIZE;
+    	res[i].u.mem.size = BRD_CTRL_SIZE;
     }
 
     /* assign the resources */
@@ -734,9 +734,9 @@ static int32 D302_BrdInfo(
 		 * build hw name (e.g. D302 board)
 		 */
 		from = BBNAME;
-	    while( (*brdName++ = *from++) );	/* copy string */
+		while( (*brdName++ = *from++) );	/* copy string */
 		from = " board";
-	    while( (*brdName++ = *from++) );	/* copy string */
+		while( (*brdName++ = *from++) );	/* copy string */
 
         break;
     }
@@ -1116,7 +1116,7 @@ static int32 D302_GetMAddr(
         return ERR_BBIS_ILL_SLOT;
     }
 
-	*mAddr = (void*)((u_int32)(brdHdl->bar0) + BRD_MBASE_OFFSET(mSlot));
+	*mAddr = (void*)((U_INT32_OR_64)(brdHdl->bar0) + BRD_MBASE_OFFSET(mSlot));
 	*mSize = BRD_MODULE_SIZE;
 
 	DBGWRT_2((DBH, " mSlot=0x%04x : mem address=0x%x, length=0x%x\n",
@@ -1148,7 +1148,7 @@ static int32 D302_SetStat(
     BBIS_HANDLE     *brdHdl,
     u_int32         mSlot,
     int32           code,
-    int32           value )
+    INT32_OR_64     value )
 {
     DBGWRT_1((DBH, "BB - %s_SetStat: mSlot=0x%04x code=0x%04x value=0x%x\n",
 			  BBNAME, mSlot, code, value));
@@ -1202,7 +1202,7 @@ static int32 D302_GetStat(
     BBIS_HANDLE     *brdHdl,
     u_int32         mSlot,
     int32           code,
-    int32           *valueP )
+    INT32_OR_64     *valueP )
 {
     DBGWRT_1((DBH, "BB - %s_GetStat: mSlot=0x%04x code=0x%04x\n",BBNAME,mSlot,code));
 
@@ -1244,7 +1244,7 @@ static int32 D302_GetStat(
 
         /* ident table */
         case M_MK_BLK_REV_ID:
-			*valueP = (int32)&brdHdl->idFuncTbl;
+			*valueP = (INT32_OR_64)&brdHdl->idFuncTbl;
 			break;
 
         /* unknown */
@@ -1282,6 +1282,8 @@ static char* Ident( void )		/* nodoc */
 {
 	return (
 #if D302_VARIANT==D302
+		"D302"
+#elif D302_VARIANT==D302_SW
 		"D302"
 #endif
 		"  Base Board Handler: $Id: bb_d302.c,v 1.6 2011/05/20 10:46:55 CRuff Exp $" );
@@ -1337,7 +1339,7 @@ static int32 Cleanup(
 		for( i=0; i<BRD_MODULE_NBR; i++){
 			 res[i].type = OSS_RES_MEM;
 			res[i].u.mem.physAddr =	(void*)(
-									(u_int32)brdHdl->bar0 +
+									(U_INT32_OR_64)brdHdl->bar0 +
 									BRD_MBASE_OFFSET(i) +
 									BRD_CTRLR_OFFSET );
 			res[i].u.mem.size = BRD_CTRL_SIZE;

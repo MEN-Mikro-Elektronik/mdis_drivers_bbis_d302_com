@@ -41,7 +41,8 @@
     extern "C" {
 #endif
 
-
+#define D302		0
+#define D302_SW		1
 /*-----------------------------------------+
 |  D302                                    |
 +-----------------------------------------*/
@@ -55,8 +56,17 @@
 #	define BRD_MODULE_SIZE			0x100			/* size of module space				*/
 #	define BRD_CTRLR_OFFSET			0x104			/* offset to ctrl/status registers	*/
 #	define BRD_CTRL_SIZE			0x4				/* size of ctrl/status registers	*/
+#elif D302_VARIANT==D302_SW
+#	define BBNAME					"D302"			/* board function prefix			*/
+#	define BRD_BUSTYPE				OSS_BUSTYPE_PCI	/* board bus type PCI				*/
+#	define BRD_PCI_VEN_ID			D302_PCI_VEN_ID	/* pci vendor-id					*/
+#	define BRD_PCI_DEV_ID			D302_PCI_DEV_ID	/* pci device-id					*/
+#	define BRD_MODULE_NBR			4				/* number of devices				*/
+#	define BRD_MBASE_OFFSET(m)		((m)*0x200 )	/* offset to module base addr		*/
+#	define BRD_MODULE_SIZE			0x100			/* size of module space				*/
+#	define BRD_CTRLR_OFFSET			0x104			/* offset to ctrl/status registers	*/
+#	define BRD_CTRL_SIZE			0x4				/* size of ctrl/status registers	*/
 #endif
-
 
 #ifdef __cplusplus
     }
