@@ -10,14 +10,9 @@
  *
  *     Switches: ---
  *
- *-------------------------------[ History ]---------------------------------
- *
- * $Log: brd.h,v $
- * Revision 1.1  2001/11/12 15:48:13  Schmidt
- * Initial Revision
  *
  *---------------------------------------------------------------------------
- * (c) Copyright 2001 by MEN mikro elektronik GmbH, Nuremberg, Germany
+ * Copyright (c) 2001-2019, MEN Mikro Elektronik GmbH
  ******************************************************************************/
 /*
  * This program is free software: you can redistribute it and/or modify

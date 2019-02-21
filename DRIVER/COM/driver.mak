@@ -6,17 +6,8 @@
 #  
 #    Description: Makefile definitions for the D302 BBIS driver
 #                      
-#---------------------------------[ History ]---------------------------------
-#
-#   $Log: driver.mak,v $
-#   Revision 1.2  2001/11/14 09:55:14  Schmidt
-#   MAK_INCL was wrong
-#
-#   Revision 1.1  2001/11/12 15:48:16  Schmidt
-#   Initial Revision
-#
 #-----------------------------------------------------------------------------
-#   (c) Copyright 2001 by MEN mikro elektronik GmbH, Nuernberg, Germany 
+#   Copyright (c) 2001-2019, MEN Mikro Elektronik GmbH
 #*****************************************************************************
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

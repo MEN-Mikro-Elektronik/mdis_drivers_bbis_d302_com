@@ -23,45 +23,9 @@
  *               D302_VARIANT - prefix for global symbols
  *               D302_VARIANT=D302 : standard bbis (supports D302 CPCI boards)
  *
- *-------------------------------[ History ]---------------------------------
- *
- * $Log: bb_d302.c,v $
- * Revision 1.6  2011/05/20 10:46:55  CRuff
- * R: 1. support of pci domains
- *    2. support for multi function bridges
- * M: 1a) added handling of code BBIS_CFGINFO_PCI_DOMAIN to CHAMELEON_CfgInfo()
- *    1b) added new member pciDomainNbr to BBIS_HANDLE
- *    1c) extend debug prints of pci bus number to also print the domain number
- *    1d) call all occurrences of OSS_PciXetConfig (and other OSS calls)
- *        with merged bus and domain
- *    1e) in ParsePciPath(): look for root device on all busses instead of
- *        expecting root device on bus 0
- *    2a) in ParsePciPath(), check for for HEADERTYPE_MULTIFUNCTION also when
- *        deciding if a device is a bridge
- *    2b) in PciParseDev() and PciCfgErr(), extract the function number out of
- *        the merged device number before using device and function
- *
- * Revision 1.5  2009/07/28 16:52:32  cs
- * R: definition of MACCESS macros cause compiler errors for PPC85XX
- * M: enclose MACCESS statements in conditional blocks in brackets
- *
- * Revision 1.4  2006/12/20 12:41:32  ufranke
- * fixed
- *  - function pointer setIrqHandle should be NULL if not implemented
- *    or must be implemented completely
- *
- * Revision 1.3  2006/12/15 16:18:14  ts
- * replaced BBIS fkt13 with setIrqHandle
- *
- * Revision 1.2  2004/06/21 15:35:17  dpfeuffer
- * D302_BrdInfo(BBIS_BRDINFO_BRDNAME): implemented
- * D302_CfgInfo(BBIS_CFGINFO_SLOT): implemented
- *
- * Revision 1.1  2001/11/12 15:48:10  Schmidt
- * Initial Revision
  *
  *---------------------------------------------------------------------------
- * (c) Copyright 2001 by MEN mikro elektronik GmbH, Nuremberg, Germany
+ * Copyright (c) 2001-2019, MEN Mikro Elektronik GmbH
  ******************************************************************************/
 /*
  * This program is free software: you can redistribute it and/or modify
