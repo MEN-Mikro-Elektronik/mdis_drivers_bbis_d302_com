@@ -3,8 +3,6 @@
  *         Name: d302_int.h
  *
  *       Author: ds
- *        $Date: 2001/11/12 15:48:15 $
- *    $Revision: 1.1 $
  *
  *  Description: Internal header file for D302 BBIS
  *

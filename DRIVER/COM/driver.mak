@@ -1,8 +1,6 @@
 #***************************  M a k e f i l e  *******************************
 #  
 #         Author: ds
-#          $Date: 2001/11/14 09:55:14 $
-#      $Revision: 1.2 $
 #  
 #    Description: Makefile definitions for the D302 BBIS driver
 #                      
@@ -24,8 +22,13 @@
 
 
 MAK_NAME=d302
+# the next line is updated during the MDIS installation
+STAMPED_REVISION="mdis_drivers_bbis_d302_com_01_42-0-gf1f51e0-dirty_2019-02-21"
+
+DEF_REVISION=MAK_REVISION=$(STAMPED_REVISION)
 
 MAK_SWITCH=$(SW_PREFIX)MAC_MEM_MAPPED \
+		$(SW_PREFIX)$(DEF_REVISION) \
 		   $(SW_PREFIX)D302_VARIANT=D302
 		    	 	 
 MAK_LIBS=$(LIB_PREFIX)$(MEN_LIB_DIR)/desc$(LIB_SUFFIX)	\

@@ -3,8 +3,6 @@
  *         Name: brd.h
  *
  *       Author: ds
- *        $Date: 2001/11/12 15:48:13 $
- *    $Revision: 1.1 $
  *
  *  Description: Internal header file for board specific defines
  *

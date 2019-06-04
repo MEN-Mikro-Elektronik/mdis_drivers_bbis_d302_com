@@ -4,8 +4,6 @@
  *      Project: D302 board handler
  *
  *       Author: ds
- *        $Date: 2011/05/20 10:46:55 $
- *    $Revision: 1.6 $
  *
  *  Description: D302 board handler routines for D302 boards
  *
@@ -42,7 +40,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-static const char RCSid[]="$Id: bb_d302.c,v 1.6 2011/05/20 10:46:55 CRuff Exp $";
 
 #define _NO_BBIS_HANDLE		/* bb_defs.h: don't define BBIS_HANDLE struct */
 
@@ -102,6 +99,8 @@ typedef struct {
 /* include files which need BBIS_HANDLE */
 #include <MEN/bb_entry.h>	/* bbis jumptable			*/
 #include <MEN/bb_d302.h>	/* D302 bbis header file	*/
+
+static const char IdentString[]=MENT_XSTR(MAK_REVISION);
 #include "d302_int.h"		/* D302 specific defines	*/
 
 /*-----------------------------------------+
