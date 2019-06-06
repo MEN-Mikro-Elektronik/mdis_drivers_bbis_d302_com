@@ -100,8 +100,15 @@ typedef struct {
 #include <MEN/bb_entry.h>	/* bbis jumptable			*/
 #include <MEN/bb_d302.h>	/* D302 bbis header file	*/
 
-static const char IdentString[]=MENT_XSTR(MAK_REVISION);
 #include "d302_int.h"		/* D302 specific defines	*/
+
+#if D302_VARIANT==D302
+	static const char IdentString[]=MENT_XSTR_SFX(MAK_REVISION,D302 (non swapped));
+#elif D302_VARIANT==D302_SW
+	static const char IdentString[]=MENT_XSTR_SFX(MAK_REVISION,D302 (swapped));
+#else
+	static const char IdentString[]=MENT_XSTR(MAK_REVISION);
+#endif
 
 /*-----------------------------------------+
 |  PROTOTYPES                              |
@@ -1243,13 +1250,7 @@ static int32 D302_Unused( void )		/* nodoc */
  ****************************************************************************/
 static char* Ident( void )		/* nodoc */
 {
-	return (
-#if D302_VARIANT==D302
-		"D302"
-#elif D302_VARIANT==D302_SW
-		"D302"
-#endif
-		"  Base Board Handler: $Id: bb_d302.c,v 1.6 2011/05/20 10:46:55 CRuff Exp $" );
+	return( (char*) IdentString );
 }
 
 /********************************* Cleanup **********************************
