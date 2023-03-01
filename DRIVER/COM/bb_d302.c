@@ -1614,9 +1614,9 @@ static int32 PciCfgErr(
 static int32 CfgInfoSlot( BBIS_HANDLE *brdHdl, va_list argptr )	/* nodoc */
 {
 	u_int32 mSlot     = va_arg( argptr, u_int32 );
-    u_int32 *occupied = va_arg( argptr, u_int32* );
-    u_int32 *devId    = va_arg( argptr, u_int32* );
-    u_int32 *devRev   = va_arg( argptr, u_int32* );
+	u_int32 *occupied = va_arg( argptr, u_int32* );
+	u_int32 *devId    = va_arg( argptr, u_int32* );
+	u_int32 *devRev   = va_arg( argptr, u_int32* );
 	char	*slotName = va_arg( argptr, char* );
 	char	*devName  = va_arg( argptr, char* );
 
@@ -1631,11 +1631,11 @@ static int32 CfgInfoSlot( BBIS_HANDLE *brdHdl, va_list argptr )	/* nodoc */
 	*devName  = '\0';
 
 	/* illegal module slot number */
-    if( mSlot >= BRD_MODULE_NBR ){
+	if( mSlot >= BRD_MODULE_NBR ){
 		DBGWRT_ERR((DBH,"*** %s_CfgInfoSlot: wrong module slot number=%d\n",
-					BBNAME, mSlot));
-        return ERR_BBIS_ILL_SLOT;
-    }
+			   BBNAME, mSlot));
+		return ERR_BBIS_ILL_SLOT;
+	}
 
 	/* build slot name */
 	OSS_Sprintf( brdHdl->osHdl, slotName, "M-Module slot %d", mSlot);
@@ -1643,10 +1643,11 @@ static int32 CfgInfoSlot( BBIS_HANDLE *brdHdl, va_list argptr )	/* nodoc */
 	*occupied = BBIS_SLOT_OCCUP_YES;
 	*devId = (u_int32)0x53460042;
 	*devRev = BBIS_SLOT_NBR_UNK;
-    while( (*devNameP++ = *m66Name++) );	/* copy string */
+	
+	while( (*devNameP++ = *m66Name++) );	/* copy string */
 
 	DBGWRT_2((DBH," devId=0x%08x, devRev=0x%08x, devName=%s\n",
-				  *devId, *devRev, devName ));
+		 *devId, *devRev, devName ));
 
 	/* return on success */
 	return ERR_SUCCESS;
